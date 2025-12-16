@@ -391,7 +391,7 @@ export default function AuthPage() {
           
           <div style={socialContainerStyle}>
             <button
-              onMouseEnter={() => setHoveredSocial('f-signin')}
+              // onMouseEnter={() => setHoveredSocial('f-signin')}
               onMouseLeave={() => setHoveredSocial(null)}
               style={{
                 ...socialButtonStyle,
@@ -471,6 +471,8 @@ export default function AuthPage() {
               </button>
             )}
           </div>
+
+
         </div>
 
       </div>
