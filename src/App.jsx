@@ -1,8 +1,18 @@
 import { useState, useEffect } from 'react';
+import {AlignHorizontalJustifyEnd} from "lucide-react"
+import { ArrowLeftToLine } from "lucide-react"
+import {Facebook  } from "lucide-react"
+import {Linkedin } from "lucide-react"
+import { Instagram } from "lucide-react"
+
+
+
+
 
 export default function AuthPage() {
   const [isSignIn, setIsSignIn] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [mobileView, setMobileView] = useState('welcome'); // 'welcome', 'signup', 'signin'
 
   useEffect(() => {
     const checkMobile = () => {
@@ -26,11 +36,11 @@ export default function AuthPage() {
   const containerStyle = {
     position: 'relative',
     width: '100%',
-    maxWidth: isMobile ? '500px' : '1200px',
-    height: isMobile ? 'auto' : '600px',
-    minHeight: isMobile ? '600px' : 'auto',
+    maxWidth: isMobile ? '' : '1200px',
+    height: isMobile ? '100vh' : '600px',
+    minHeight: isMobile ? '100vh' : 'auto',
     backgroundColor: 'white',
-    borderRadius: '24px',
+    borderRadius: isMobile ? '0' : '24px',
     boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
     overflow: 'hidden'
   };
@@ -39,10 +49,11 @@ export default function AuthPage() {
     position: isMobile ? 'relative' : 'absolute',
     top: 0,
     left: 0,
-    width: isMobile ? '100%' : '50%',
-    height: isMobile ? 'auto' : '100%',
+    width: isMobile ? '' : '45%',
+    height: isMobile ? '100%' : '100%',
+    minHeight: isMobile ? '600px' : 'auto',
     background: 'linear-gradient(to bottom right, #2dd4bf, #14b8a6)',
-    display: isMobile && isSignIn ? 'none' : 'flex',
+    display: isMobile && mobileView !== 'welcome' ? 'none' : 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
@@ -56,15 +67,15 @@ export default function AuthPage() {
     position: isMobile ? 'relative' : 'absolute',
     top: 0,
     right: 0,
-    width: isMobile ? '100%' : '50%',
+    width: isMobile ? '' : '38%',
     height: isMobile ? 'auto' : '100%',
     backgroundColor: 'white',
-    display: isMobile && isSignIn ? 'none' : 'flex',
+    display: isMobile && mobileView !== 'signup' ? 'none' : 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     padding: '3rem',
-    transform: isMobile ? 'none' : (isSignIn ? 'translateX(0)' : 'translateX(100%)'),
+    transform: isMobile ? 'none' : (isSignIn ? 'translateX(-100%)' : 'translateX(0)'),
     transition: 'transform 0.6s ease-in-out'
   };
 
@@ -72,10 +83,10 @@ export default function AuthPage() {
     position: isMobile ? 'relative' : 'absolute',
     top: 0,
     left: 0,
-    width: isMobile ? '100%' : '50%',
+    width: isMobile ? '' : '50%',
     height: isMobile ? 'auto' : '100%',
     backgroundColor: 'white',
-    display: isMobile && !isSignIn ? 'none' : 'flex',
+    display: isMobile && mobileView !== 'signin' ? 'none' : 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
@@ -136,7 +147,7 @@ export default function AuthPage() {
   };
 
   const mobileToggleButtonStyle = {
-    width: '100%',
+    // width: '100%',
     padding: '0.75rem',
     backgroundColor: 'transparent',
     color: '#14b8a6',
@@ -159,16 +170,18 @@ export default function AuthPage() {
     backgroundColor: 'white',
     cursor: 'pointer',
     transition: 'all 0.2s'
+   
   };
 
   const socialContainerStyle = {
     display: 'flex',
     gap: '1rem',
-    marginBottom: '1.5rem'
+    marginBottom: '1.5rem',
+    fontWeight:'800'
   };
 
   const inputStyle = {
-    width: '100%',
+    // width: '100%',
     padding: '0.75rem 1.5rem',
     border: '2px solid #d1d5db',
     borderRadius: '9999px',
@@ -178,17 +191,33 @@ export default function AuthPage() {
   };
 
   const formContainerStyle = {
-    width: '100%',
+    // width: '100%',
     maxWidth: '400px',
     display: 'flex',
     flexDirection: 'column',
     gap: '1rem'
   };
 
-  const linkStyle = {
+  // const linkStyle = {
+  //   color: '#14b8a6',
+  //   textDecoration: 'none',
+  //   fontSize: '0.875rem'
+  // };
+
+  const backButtonStyle = {
+    position: 'absolute',
+    top: '1.5rem',
+    left: '1.5rem',
+    backgroundColor: 'transparent',
+    border: 'none',
     color: '#14b8a6',
-    textDecoration: 'none',
-    fontSize: '0.875rem'
+    fontSize: '1.5rem',
+    cursor: 'pointer',
+    padding: '0.5rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'transform 0.2s'
   };
 
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -198,15 +227,15 @@ export default function AuthPage() {
     <div style={pageStyle}>
       <div style={containerStyle}>
         
-        {/* Sign In Panel - Desktop or Mobile when not in sign-in mode */}
-        {!isMobile && (
-          <div style={signInPanelStyle}>
-            <h1 style={headingStyle}>
-              Welcome Back!
-            </h1>
-            <p style={paragraphStyle}>
-              To keep connected please Sign in with your personal info
-            </p>
+        {/* Sign In Panel */}
+        <div style={signInPanelStyle}>
+          <h1 style={headingStyle}>
+            Welcome Back!
+          </h1>
+          <p style={paragraphStyle}>
+            To keep connected please Sign in with your personal info
+          </p>
+          {!isMobile && (
             <button
               onClick={() => setIsSignIn(!isSignIn)}
               onMouseEnter={() => setHoveredButton('main')}
@@ -219,11 +248,42 @@ export default function AuthPage() {
             >
               {isSignIn ? 'Sign Up' : 'Sign In'}
             </button>
-          </div>
-        )}
+          )}
+          {isMobile && (
+            <button
+              onClick={() => setMobileView('signup')}
+              onMouseEnter={() => setHoveredButton('main')}
+              onMouseLeave={() => setHoveredButton(null)}
+              style={{
+                ...buttonPrimaryStyle,
+             
+              }}
+            >
+              Sign Up 
+            </button>
+          )}
+        </div>
 
         {/* Sign Up Panel */}
         <div style={signUpPanelStyle}>
+          {isMobile && mobileView === 'signup' && (
+            <button
+              onClick={() => setMobileView('welcome')}
+              onMouseEnter={() => setHoveredButton('back-signup')}
+              onMouseLeave={() => setHoveredButton(null)}
+              style={{
+                ...backButtonStyle,
+                transform: hoveredButton === 'back-signup' ? 'scale(1.2)' : 'scale(1)'
+              }}
+            >
+              <ArrowLeftToLine />
+            </button>
+          )}
+
+
+          <div style={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center'}}>
+
+          
           <h2 style={subHeadingStyle}>Create Account</h2>
           
           <div style={socialContainerStyle}>
@@ -232,33 +292,30 @@ export default function AuthPage() {
               onMouseLeave={() => setHoveredSocial(null)}
               style={{
                 ...socialButtonStyle,
-                borderColor: hoveredSocial === 'f-signup' ? '#14b8a6' : '#d1d5db',
-                transform: hoveredSocial === 'f-signup' ? 'scale(1.1)' : 'scale(1)'
+               
               }}
             >
-              <span style={{ fontWeight: 'bold' }}>f</span>
+              <span><Facebook /></span>
             </button>
             <button
               onMouseEnter={() => setHoveredSocial('g-signup')}
               onMouseLeave={() => setHoveredSocial(null)}
               style={{
                 ...socialButtonStyle,
-                borderColor: hoveredSocial === 'g-signup' ? '#14b8a6' : '#d1d5db',
-                transform: hoveredSocial === 'g-signup' ? 'scale(1.1)' : 'scale(1)'
+              
               }}
             >
-              <span style={{ fontWeight: 'bold' }}>G</span>
+              <span ><Instagram /></span>
             </button>
             <button
               onMouseEnter={() => setHoveredSocial('in-signup')}
               onMouseLeave={() => setHoveredSocial(null)}
               style={{
                 ...socialButtonStyle,
-                borderColor: hoveredSocial === 'in-signup' ? '#14b8a6' : '#d1d5db',
-                transform: hoveredSocial === 'in-signup' ? 'scale(1.1)' : 'scale(1)'
+               
               }}
             >
-              <span style={{ fontWeight: 'bold' }}>in</span>
+              <span >  <Linkedin /></span>
             </button>
           </div>
 
@@ -269,39 +326,37 @@ export default function AuthPage() {
               type="text"
               placeholder="Name"
               style={inputStyle}
-              onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-              onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+            
             />
             <input
               type="email"
               placeholder="Email"
               style={inputStyle}
-              onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-              onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+            
             />
             <input
               type="password"
               placeholder="Password"
               style={inputStyle}
-              onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-              onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+            
             />
             <button
               onMouseEnter={() => setHoveredButton('signup')}
               onMouseLeave={() => setHoveredButton(null)}
               style={{
                 ...buttonSecondaryStyle,
-                backgroundColor: hoveredButton === 'signup' ? '#0d9488' : '#14b8a6',
+    
                 transform: hoveredButton === 'signup' ? 'scale(1.05)' : 'scale(1)'
               }}
             >
               Sign Up
             </button>
+            </div>
             
             {/* Mobile Toggle Button */}
             {isMobile && (
               <button
-                onClick={() => setIsSignIn(true)}
+                onClick={() => setMobileView('signin')}
                 onMouseEnter={() => setHoveredButton('mobile-toggle-signup')}
                 onMouseLeave={() => setHoveredButton(null)}
                 style={{
@@ -318,6 +373,20 @@ export default function AuthPage() {
 
         {/* Sign In Form */}
         <div style={signInFormStyle}>
+          {isMobile && mobileView === 'signin' && (
+            <button
+              onClick={() => setMobileView('welcome')}
+              onMouseEnter={() => setHoveredButton('back-signin')}
+              onMouseLeave={() => setHoveredButton(null)}
+              style={{
+                ...backButtonStyle,
+                transform: hoveredButton === 'back-signin' ? 'scale(1.2)' : 'scale(1)'
+              }}
+            >
+              <ArrowLeftToLine />
+            </button>
+          )}
+          
           <h2 style={subHeadingStyle}>Sign In</h2>
           
           <div style={socialContainerStyle}>
@@ -330,7 +399,7 @@ export default function AuthPage() {
                 transform: hoveredSocial === 'f-signin' ? 'scale(1.1)' : 'scale(1)'
               }}
             >
-              <span style={{ fontWeight: 'bold' }}>f</span>
+              <span > <Facebook /> </span>
             </button>
             <button
               onMouseEnter={() => setHoveredSocial('g-signin')}
@@ -341,7 +410,7 @@ export default function AuthPage() {
                 transform: hoveredSocial === 'g-signin' ? 'scale(1.1)' : 'scale(1)'
               }}
             >
-              <span style={{ fontWeight: 'bold' }}>G</span>
+              <span ><Instagram /></span>
             </button>
             <button
               onMouseEnter={() => setHoveredSocial('in-signin')}
@@ -352,7 +421,7 @@ export default function AuthPage() {
                 transform: hoveredSocial === 'in-signin' ? 'scale(1.1)' : 'scale(1)'
               }}
             >
-              <span style={{ fontWeight: 'bold' }}>in</span>
+              <span > <Linkedin /> </span>
             </button>
           </div>
 
@@ -373,9 +442,7 @@ export default function AuthPage() {
               onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
               onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
             />
-            <a href="#" style={linkStyle}>
-              Forgot your password?
-            </a>
+            
             <button
               onMouseEnter={() => setHoveredButton('signin')}
               onMouseLeave={() => setHoveredButton(null)}
@@ -391,7 +458,7 @@ export default function AuthPage() {
             {/* Mobile Toggle Button */}
             {isMobile && (
               <button
-                onClick={() => setIsSignIn(false)}
+                onClick={() => setMobileView('signup')}
                 onMouseEnter={() => setHoveredButton('mobile-toggle-signin')}
                 onMouseLeave={() => setHoveredButton(null)}
                 style={{
