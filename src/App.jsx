@@ -1,309 +1,412 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
-function App() {
-  const [currentPage, setCurrentPage] = useState('signup');
-  const [hoveredButton, setHoveredButton] = useState(null);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+export default function AuthPage() {
+  const [isSignIn, setIsSignIn] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
     };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const mainContainerStyle = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+  const pageStyle = {
     minHeight: '100vh',
     backgroundColor: '#f3f4f6',
-    padding: isMobile ? '0' : '40px'
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '1rem'
   };
 
   const containerStyle = {
     position: 'relative',
-    display: 'flex',
-    flexDirection: isMobile ? 'column' : 'row',
-    width: isMobile ? '100%' : '67%',
-    maxWidth: isMobile ? '100%' : '1200px',
-    backgroundColor: isMobile ? 'transparent' : '#ffffff',
-    borderRadius: isMobile ? '0' : '50px',
-    height: isMobile ? '100vh' : '600px',
-    minHeight: isMobile ? '100vh' : 'auto',
-    boxShadow: isMobile ? 'none' : '0 15px 35px rgba(0, 0, 0, 0.2)',
-    marginTop: isMobile ? '0' : '50px',
+    width: '100%',
+    maxWidth: isMobile ? '500px' : '1200px',
+    height: isMobile ? 'auto' : '600px',
+    minHeight: isMobile ? '600px' : 'auto',
+    backgroundColor: 'white',
+    borderRadius: '24px',
+    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
     overflow: 'hidden'
   };
 
-  const leftPanelStyle = {
+  const signInPanelStyle = {
     position: isMobile ? 'relative' : 'absolute',
-    display: isMobile && currentPage === 'signin' ? 'none' : 'flex',
-    flexDirection: 'column',
-    gap: isMobile ? '20px' : '20px',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#19b395',
-    padding: isMobile ? '50px 25px' : '40px',
+    top: 0,
+    left: 0,
     width: isMobile ? '100%' : '50%',
-    height: isMobile ? '100vh' : '100%',
-    minHeight: isMobile ? '100vh' : 'auto',
-    borderTopLeftRadius: isMobile ? '0' : '20px',
-    borderBottomLeftRadius: isMobile ? '0' : '20px',
-    borderTopRightRadius: isMobile ? '0' : '0',
-    left: isMobile ? 'auto' : (currentPage === 'signup' ? 0 : '50%'),
-    transition: isMobile ? 'none' : 'left 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
-    zIndex: 2
+    height: isMobile ? 'auto' : '100%',
+    background: 'linear-gradient(to bottom right, #2dd4bf, #14b8a6)',
+    display: isMobile && isSignIn ? 'none' : 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'white',
+    padding: '3rem',
+    transform: isMobile ? 'none' : (isSignIn ? 'translateX(100%)' : 'translateX(0)'),
+    transition: 'transform 0.6s ease-in-out'
   };
 
-  const rightPanelStyle = {
+  const signUpPanelStyle = {
     position: isMobile ? 'relative' : 'absolute',
-    display: isMobile && currentPage === 'signup' ? 'none' : 'flex',
-    flexDirection: 'column',
-    gap: isMobile ? '15px' : '20px',
-    padding: isMobile ? '40px 25px' : '40px',
+    top: 0,
+    right: 0,
     width: isMobile ? '100%' : '50%',
-    height: isMobile ? '100vh' : '100%',
-    minHeight: isMobile ? '100vh' : 'auto',
-    justifyContent: 'center',
+    height: isMobile ? 'auto' : '100%',
+    backgroundColor: 'white',
+    display: isMobile && isSignIn ? 'none' : 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
-    borderBottomLeftRadius: isMobile ? '0' : '0',
-    borderBottomRightRadius: isMobile ? '0' : '0',
-    left: isMobile ? 'auto' : (currentPage === 'signup' ? '50%' : 0),
-    transition: isMobile ? 'none' : 'left 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
-    zIndex: 1
+    justifyContent: 'center',
+    padding: '3rem',
+    transform: isMobile ? 'none' : (isSignIn ? 'translateX(0)' : 'translateX(100%)'),
+    transition: 'transform 0.6s ease-in-out'
+  };
+
+  const signInFormStyle = {
+    position: isMobile ? 'relative' : 'absolute',
+    top: 0,
+    left: 0,
+    width: isMobile ? '100%' : '50%',
+    height: isMobile ? 'auto' : '100%',
+    backgroundColor: 'white',
+    display: isMobile && !isSignIn ? 'none' : 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '3rem',
+    opacity: isMobile ? 1 : (isSignIn ? 1 : 0),
+    pointerEvents: isMobile ? 'auto' : (isSignIn ? 'auto' : 'none'),
+    transition: isSignIn ? 'opacity 0.3s ease-in-out 0.3s' : 'opacity 0.3s ease-in-out'
+  };
+
+  const headingStyle = {
+    fontSize: isMobile ? '2rem' : '3rem',
+    fontWeight: 'bold',
+    marginBottom: '1.5rem',
+    textAlign: 'center'
+  };
+
+  const subHeadingStyle = {
+    fontSize: isMobile ? '1.75rem' : '2.25rem',
+    fontWeight: 'bold',
+    marginBottom: '1.5rem',
+    color: '#111827'
+  };
+
+  const paragraphStyle = {
+    fontSize: isMobile ? '1rem' : '1.125rem',
+    marginBottom: '2rem',
+    textAlign: 'center'
+  };
+
+  const grayTextStyle = {
+    color: '#6b7280',
+    marginBottom: '1.5rem',
+    fontSize: isMobile ? '0.875rem' : '1rem'
   };
 
   const buttonPrimaryStyle = {
-    padding: isMobile ? '10px 28px' : '10px 30px',
-    fontSize: isMobile ? '1rem' : '1.2rem',
-    background: 'transparent',
-    borderRadius: '50px',
+    padding: '0.75rem 3rem',
     border: '2px solid white',
+    borderRadius: '9999px',
     color: 'white',
-    cursor: 'pointer',
-    transition: 'all 0.3s',
     fontWeight: '600',
-    whiteSpace: 'nowrap'
+    backgroundColor: 'transparent',
+    cursor: 'pointer',
+    transition: 'all 0.2s'
+  };
+
+  const buttonSecondaryStyle = {
+    width: '100%',
+    padding: '0.75rem 3rem',
+    backgroundColor: '#14b8a6',
+    color: 'white',
+    borderRadius: '9999px',
+    fontWeight: '600',
+    border: 'none',
+    cursor: 'pointer',
+    marginTop: '1.5rem',
+    transition: 'all 0.2s'
+  };
+
+  const mobileToggleButtonStyle = {
+    width: '100%',
+    padding: '0.75rem',
+    backgroundColor: 'transparent',
+    color: '#14b8a6',
+    border: '2px solid #14b8a6',
+    borderRadius: '9999px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    marginTop: '1rem',
+    transition: 'all 0.2s'
   };
 
   const socialButtonStyle = {
-    backgroundColor: 'transparent',
-    padding: '0',
-    fontSize: isMobile ? '1rem' : '1.2rem',
-    fontWeight: '800',
-    borderRadius: '50px',
-    border: '2px solid black',
-    cursor: 'pointer',
-    transition: 'all 0.2s',
-    width: isMobile ? '42px' : '50px',
-    height: isMobile ? '42px' : '50px',
+    width: '48px',
+    height: '48px',
+    border: '2px solid #d1d5db',
+    borderRadius: '9999px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    flexShrink: 0
+    backgroundColor: 'white',
+    cursor: 'pointer',
+    transition: 'all 0.2s'
+  };
+
+  const socialContainerStyle = {
+    display: 'flex',
+    gap: '1rem',
+    marginBottom: '1.5rem'
   };
 
   const inputStyle = {
-    padding: isMobile ? '11px 18px' : '12px 20px',
-    borderRadius: '50px',
-    backgroundColor: 'transparent',
-    border: '2px solid black',
-    outline: 'none',
     width: '100%',
-    fontSize: isMobile ? '0.95rem' : '1rem',
-    boxSizing: 'border-box'
+    padding: '0.75rem 1.5rem',
+    border: '2px solid #d1d5db',
+    borderRadius: '9999px',
+    fontSize: '1rem',
+    outline: 'none',
+    transition: 'border-color 0.2s'
   };
 
-  const submitButtonStyle = {
-    backgroundColor: '#19b395',
-    color: 'white',
-    padding: isMobile ? '11px 38px' : '12px 40px',
-    fontSize: isMobile ? '1rem' : '1.2rem',
-    borderRadius: '50px',
-    border: 'none',
-    cursor: 'pointer',
-    transition: 'all 0.2s',
-    fontWeight: '600',
-    width: isMobile ? '100%' : 'auto'
+  const formContainerStyle = {
+    width: '100%',
+    maxWidth: '400px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '1rem'
   };
+
+  const linkStyle = {
+    color: '#14b8a6',
+    textDecoration: 'none',
+    fontSize: '0.875rem'
+  };
+
+  const [hoveredButton, setHoveredButton] = useState(null);
+  const [hoveredSocial, setHoveredSocial] = useState(null);
 
   return (
-    <div style={mainContainerStyle}>
+    <div style={pageStyle}>
       <div style={containerStyle}>
-      
-        <div style={leftPanelStyle}>
-          {isMobile && currentPage === 'signin' ? null : (
-            <>
-              <h1 style={{ 
-                fontSize: isMobile ? '2.2rem' : '3rem', 
-                color: 'white', 
-                margin: 0, 
-                textAlign: 'center',
-                lineHeight: '1.2'
-              }}>
-                {currentPage === 'signup' ? 'Welcome!' : 'Hello, Friend!'}
-              </h1>
-              <p style={{ 
-                fontSize: isMobile ? '1.05rem' : '1.2rem', 
-                color: 'white', 
-                textAlign: 'center', 
-                margin: 0, 
-                padding: isMobile ? '0 10px' : '0',
-                lineHeight: '1.6'
-              }}>
-                {currentPage === 'signup' 
-                  ? 'Create your account and start your journey with us today'
-                  : 'Enter your personal details and start journey with us'
-                }
-              </p>
-              <button
-                onClick={() => setCurrentPage(currentPage === 'signup' ? 'signin' : 'signup')}
-                onMouseEnter={() => setHoveredButton('toggle')}
-                onMouseLeave={() => setHoveredButton(null)}
-                style={{
-                  ...buttonPrimaryStyle,
-                  backgroundColor: hoveredButton === 'toggle' ? 'white' : 'transparent',
-                  color: hoveredButton === 'toggle' ? '#19b395' : 'white',
-                  transform: hoveredButton === 'toggle' ? 'scale(1.05)' : 'scale(1)'
-                }}
-              >
-                {currentPage === 'signup' ? 'Sign In' : 'Sign Up'}
-              </button>
-            </>
-          )}
-        </div>
-
-        {/* Form Panel */}
-        <div style={rightPanelStyle}>
-          {isMobile && currentPage === 'signup' ? null : (
-            <>
-            <h1 style={{ 
-              fontSize: isMobile ? '2rem' : '3rem', 
-              color: 'black', 
-              margin: 0,
-              marginBottom: isMobile ? '8px' : '0'
-            }}>
-              {currentPage === 'signup' ? 'Create Account' : 'Sign In'}
+        
+        {/* Sign In Panel - Desktop or Mobile when not in sign-in mode */}
+        {!isMobile && (
+          <div style={signInPanelStyle}>
+            <h1 style={headingStyle}>
+              Welcome Back!
             </h1>
-            
-            <div style={{ 
-              display: 'flex', 
-              gap: isMobile ? '12px' : '15px', 
-              marginTop: isMobile ? '5px' : '10px',
-              marginBottom: isMobile ? '5px' : '0'
-            }}>
+            <p style={paragraphStyle}>
+              To keep connected please Sign in with your personal info
+            </p>
             <button
-              onMouseEnter={() => setHoveredButton('f')}
+              onClick={() => setIsSignIn(!isSignIn)}
+              onMouseEnter={() => setHoveredButton('main')}
               onMouseLeave={() => setHoveredButton(null)}
               style={{
-                ...socialButtonStyle,
-                transform: hoveredButton === 'f' ? 'scale(1.1)' : 'scale(1)',
-                borderColor: hoveredButton === 'f' ? '#19b395' : 'black'
+                ...buttonPrimaryStyle,
+                backgroundColor: hoveredButton === 'main' ? 'white' : 'transparent',
+                color: hoveredButton === 'main' ? '#14b8a6' : 'white'
               }}
             >
-              f
+              {isSignIn ? 'Sign Up' : 'Sign In'}
+            </button>
+          </div>
+        )}
+
+        {/* Sign Up Panel */}
+        <div style={signUpPanelStyle}>
+          <h2 style={subHeadingStyle}>Create Account</h2>
+          
+          <div style={socialContainerStyle}>
+            <button
+              onMouseEnter={() => setHoveredSocial('f-signup')}
+              onMouseLeave={() => setHoveredSocial(null)}
+              style={{
+                ...socialButtonStyle,
+                borderColor: hoveredSocial === 'f-signup' ? '#14b8a6' : '#d1d5db',
+                transform: hoveredSocial === 'f-signup' ? 'scale(1.1)' : 'scale(1)'
+              }}
+            >
+              <span style={{ fontWeight: 'bold' }}>f</span>
             </button>
             <button
-              onMouseEnter={() => setHoveredButton('g')}
-              onMouseLeave={() => setHoveredButton(null)}
+              onMouseEnter={() => setHoveredSocial('g-signup')}
+              onMouseLeave={() => setHoveredSocial(null)}
               style={{
                 ...socialButtonStyle,
-                transform: hoveredButton === 'g' ? 'scale(1.1)' : 'scale(1)',
-                borderColor: hoveredButton === 'g' ? '#19b395' : 'black'
+                borderColor: hoveredSocial === 'g-signup' ? '#14b8a6' : '#d1d5db',
+                transform: hoveredSocial === 'g-signup' ? 'scale(1.1)' : 'scale(1)'
               }}
             >
-              G
+              <span style={{ fontWeight: 'bold' }}>G</span>
             </button>
             <button
-              onMouseEnter={() => setHoveredButton('in')}
-              onMouseLeave={() => setHoveredButton(null)}
+              onMouseEnter={() => setHoveredSocial('in-signup')}
+              onMouseLeave={() => setHoveredSocial(null)}
               style={{
                 ...socialButtonStyle,
-                transform: hoveredButton === 'in' ? 'scale(1.1)' : 'scale(1)',
-                borderColor: hoveredButton === 'in' ? '#19b395' : 'black'
+                borderColor: hoveredSocial === 'in-signup' ? '#14b8a6' : '#d1d5db',
+                transform: hoveredSocial === 'in-signup' ? 'scale(1.1)' : 'scale(1)'
               }}
             >
-              in
+              <span style={{ fontWeight: 'bold' }}>in</span>
             </button>
           </div>
 
-          <p style={{ 
-            fontSize: isMobile ? '0.92rem' : '1.1rem', 
-            color: '#666', 
-            margin: isMobile ? '5px 0' : '10px 0'
-          }}>
-            {currentPage === 'signup' ? 'or use your email for registration' : 'or use your account'}
-          </p>
+          <p style={grayTextStyle}>or use your email for registration</p>
 
-          <div style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: isMobile ? '14px' : '18px', 
-            width: '100%',
-            maxWidth: isMobile ? '100%' : '85%'
-          }}>
-            {currentPage === 'signup' && (
-              <input
-                style={inputStyle}
-                type="text"
-                placeholder="Name"
-                onFocus={(e) => (e.target.style.borderColor = '#19b395')}
-                onBlur={(e) => (e.target.style.borderColor = 'black')}
-              />
-            )}
+          <div style={formContainerStyle}>
             <input
+              type="text"
+              placeholder="Name"
               style={inputStyle}
+              onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+              onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+            />
+            <input
               type="email"
               placeholder="Email"
-              onFocus={(e) => (e.target.style.borderColor = '#19b395')}
-              onBlur={(e) => (e.target.style.borderColor = 'black')}
+              style={inputStyle}
+              onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+              onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
             />
             <input
-              style={inputStyle}
               type="password"
               placeholder="Password"
-              onFocus={(e) => (e.target.style.borderColor = '#19b395')}
-              onBlur={(e) => (e.target.style.borderColor = 'black')}
+              style={inputStyle}
+              onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+              onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
             />
-            {currentPage === 'signin' && (
-              <a 
-                href="#" 
-                style={{ 
-                  color: '#19b395', 
-                  textDecoration: 'none', 
-                  fontSize: isMobile ? '0.88rem' : '0.95rem', 
-                  textAlign: 'center',
-                  marginTop: isMobile ? '-5px' : '0'
-                }}
-              >
-                Forgot your password?
-              </a>
-            )}
             <button
-              onMouseEnter={() => setHoveredButton('submit')}
+              onMouseEnter={() => setHoveredButton('signup')}
               onMouseLeave={() => setHoveredButton(null)}
               style={{
-                ...submitButtonStyle,
-                backgroundColor: hoveredButton === 'submit' ? '#0d9488' : '#19b395',
-                transform: hoveredButton === 'submit' ? 'scale(1.05)' : 'scale(1)',
-                marginTop: isMobile ? '5px' : '0'
+                ...buttonSecondaryStyle,
+                backgroundColor: hoveredButton === 'signup' ? '#0d9488' : '#14b8a6',
+                transform: hoveredButton === 'signup' ? 'scale(1.05)' : 'scale(1)'
               }}
             >
-              {currentPage === 'signup' ? 'Sign Up' : 'Sign In'}
+              Sign Up
+            </button>
+            
+            {/* Mobile Toggle Button */}
+            {isMobile && (
+              <button
+                onClick={() => setIsSignIn(true)}
+                onMouseEnter={() => setHoveredButton('mobile-toggle-signup')}
+                onMouseLeave={() => setHoveredButton(null)}
+                style={{
+                  ...mobileToggleButtonStyle,
+                  backgroundColor: hoveredButton === 'mobile-toggle-signup' ? '#14b8a6' : 'transparent',
+                  color: hoveredButton === 'mobile-toggle-signup' ? 'white' : '#14b8a6'
+                }}
+              >
+                Already have an account? Sign In
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Sign In Form */}
+        <div style={signInFormStyle}>
+          <h2 style={subHeadingStyle}>Sign In</h2>
+          
+          <div style={socialContainerStyle}>
+            <button
+              onMouseEnter={() => setHoveredSocial('f-signin')}
+              onMouseLeave={() => setHoveredSocial(null)}
+              style={{
+                ...socialButtonStyle,
+                borderColor: hoveredSocial === 'f-signin' ? '#14b8a6' : '#d1d5db',
+                transform: hoveredSocial === 'f-signin' ? 'scale(1.1)' : 'scale(1)'
+              }}
+            >
+              <span style={{ fontWeight: 'bold' }}>f</span>
+            </button>
+            <button
+              onMouseEnter={() => setHoveredSocial('g-signin')}
+              onMouseLeave={() => setHoveredSocial(null)}
+              style={{
+                ...socialButtonStyle,
+                borderColor: hoveredSocial === 'g-signin' ? '#14b8a6' : '#d1d5db',
+                transform: hoveredSocial === 'g-signin' ? 'scale(1.1)' : 'scale(1)'
+              }}
+            >
+              <span style={{ fontWeight: 'bold' }}>G</span>
+            </button>
+            <button
+              onMouseEnter={() => setHoveredSocial('in-signin')}
+              onMouseLeave={() => setHoveredSocial(null)}
+              style={{
+                ...socialButtonStyle,
+                borderColor: hoveredSocial === 'in-signin' ? '#14b8a6' : '#d1d5db',
+                transform: hoveredSocial === 'in-signin' ? 'scale(1.1)' : 'scale(1)'
+              }}
+            >
+              <span style={{ fontWeight: 'bold' }}>in</span>
             </button>
           </div>
-        </>
-        )
-        }
+
+          <p style={grayTextStyle}>or use your account</p>
+
+          <div style={formContainerStyle}>
+            <input
+              type="email"
+              placeholder="Email"
+              style={inputStyle}
+              onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+              onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              style={inputStyle}
+              onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+              onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+            />
+            <a href="#" style={linkStyle}>
+              Forgot your password?
+            </a>
+            <button
+              onMouseEnter={() => setHoveredButton('signin')}
+              onMouseLeave={() => setHoveredButton(null)}
+              style={{
+                ...buttonSecondaryStyle,
+                backgroundColor: hoveredButton === 'signin' ? '#0d9488' : '#14b8a6',
+                transform: hoveredButton === 'signin' ? 'scale(1.05)' : 'scale(1)'
+              }}
+            >
+              Sign In
+            </button>
+            
+            {/* Mobile Toggle Button */}
+            {isMobile && (
+              <button
+                onClick={() => setIsSignIn(false)}
+                onMouseEnter={() => setHoveredButton('mobile-toggle-signin')}
+                onMouseLeave={() => setHoveredButton(null)}
+                style={{
+                  ...mobileToggleButtonStyle,
+                  backgroundColor: hoveredButton === 'mobile-toggle-signin' ? '#14b8a6' : 'transparent',
+                  color: hoveredButton === 'mobile-toggle-signin' ? 'white' : '#14b8a6'
+                }}
+              >
+                Don't have an account? Sign Up
+              </button>
+            )}
+          </div>
         </div>
-       
+
       </div>
     </div>
   );
 }
-
-export default App;
